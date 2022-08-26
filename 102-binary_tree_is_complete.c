@@ -1,32 +1,55 @@
 #include "binary_trees.h"
-#include "11-binary_tree_size.c"
 /**
- * complete - checks if tree is complete or not
- * @tree: a pointer to the root of the tree
- * @index: index for right and left child
- * @count: the size of the tree
- * Return: 1 if complete 0 if not
- */
-int complete(const binary_tree_t *tree, int index, int count)
-{
-if (tree == NULL)
-return (1);
-if (index >= count)
-return (0);
-return (complete(tree->left, 2 * index + 1, count) &&
-complete(tree->right, 2 * index + 2, count));
-}
-/**
- * binary_tree_is_complete - checks if tree is complete or not
- * @tree: a pointer to the root of the tree
- * Return: 1 if complete 0 if not
+ * binary_tree_is_complete - is complete
+ * @tree: tree
+ * Return: 0 in false 1 in true
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-int count = binary_tree_size(tree);
-int index = 0;
+	unsigned int i = 0;
+	size_t size;
 
-if (tree == NULL)
-return (0);
-return (complete(tree, index, count));
+	if (tree == NULL)
+		return (0);
+
+	size = binary_tree_size(tree);
+	return (check(tree, i, size));
+}
+/**
+ * check - helper func for binary_tree_is_complete
+ * @tree: tree
+ * @index: current node
+ * @size: size
+ * Return: 0 in false 1 in true
+ */
+int check(const binary_tree_t *tree, unsigned int index, size_t size)
+{
+	int isComplete = 0;
+
+	if (tree == NULL)
+		return (1);
+
+	if (index >= size)
+		return (0);
+
+	isComplete = check(tree->left, 2 * index + 1, size) &&
+		check(tree->right, 2 * index + 2, size);
+	return (isComplete);
+}
+
+/**
+ * binary_tree_size - measure the size
+ * @tree: input
+ * Return: size
+ */
+size_t binary_tree_size(const binary_tree_t *tree)
+{
+	int size;
+
+	if (tree == NULL)
+		return (0);
+
+	size = 1 + binary_tree_size(tree->right) + binary_tree_size(tree->left);
+
+	return (size);
 }
