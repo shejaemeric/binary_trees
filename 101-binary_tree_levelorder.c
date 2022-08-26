@@ -1,77 +1,58 @@
 #include "binary_trees.h"
-
 /**
- * binary_tree_levelorder - level order
- * @tree: tree
- * @func: func
- * Return: void
+ * height - check the level order of a tree
+ * @tree: tree to check
+ * Return: levelorder
  */
-void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
+int height(const binary_tree_t *tree)
 {
-	size_t i, height;
+	int l_h = 0;
+	int r_h = 0;
 
-	if (tree == NULL || func == NULL)
-		return;
-	height = binary_tree_height(tree);
-	for (i = 0; i <= height; i++)
-		print_tree(tree, func, i);
-}
-/**
- * print_tree - prints
- * @tree: tree
- * @func: func
- * @level: depth
- */
-void print_tree(const binary_tree_t *tree, void (*func)(int), size_t level)
-{
-	if (level == 0)
-		func(tree->n);
+	if (!tree)
+		return (0);
+
+	l_h = height(tree->left);
+	r_h = height(tree->right);
+	if (l_h > r_h)
+		return (l_h + 1);
 	else
+		return (r_h + 1);
+}
+
+/**
+ * print_lvl - check the level order of a tree
+ * @tree: tree to check
+ * @level: level to check
+ * @func: func to print
+ * Return: levelorder
+ */
+void print_lvl(const binary_tree_t *tree, int level, void (*func)(int))
+{
+	if (!tree || !func)
+		return;
+
+	if (level == 1)
+		func(tree->n);
+	else if (level > 1)
 	{
-		print_tree(tree->left, func, level - 1);
-		print_tree(tree->right, func, level - 1);
+		print_lvl(tree->left, level - 1, func);
+		print_lvl(tree->right, level - 1, func);
 	}
 }
 /**
- * binary_tree_height - height of a binary tree
- * @tree: input tree
- * Return: height of tree
+ * binary_tree_levelorder - check the level order of a tree
+ * @tree: tree to check
+ * @func: func to print
+ * Return: levelorder
  */
-size_t binary_tree_height(const binary_tree_t *tree)
+void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 {
-	if (tree == NULL)
-		return (0);
-	return (measure(tree) - 1);
-}
-/**
- * measure - helper
- * @tree: input tree
- * Return: height of tree
- */
-size_t measure(const binary_tree_t *tree)
-{
-	size_t left, right;
-	int total;
+	int h = height(tree);
+	int i;
 
-	if (tree == NULL)
-		return (0);
-
-	left = measure(tree->left);
-	right = measure(tree->right);
-	total = max(left, right) + 1;
-	return (total);
-}
-
-/**
- * max - helper
- * @a: the first number
- * @b: the second number
- * Return: height of tree
- */
-int max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	else
-		return (b);
+	if (!tree || !func)
+		return;
+	for (i = 1; i <= h; i++)
+		print_lvl(tree, i, func);
 }

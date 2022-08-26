@@ -1,27 +1,25 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_insert_right - creates a node in binary tree at insert in right
- * @parent: binary tree
- * @value: value
- * Return: new node
+ * binary_tree_insert_right - funtion to insert into the right
+ * @parent: the parent node
+ * @value: the value of the new node
+ * Return: return the nes node
  */
 binary_tree_t *binary_tree_insert_right(binary_tree_t *parent, int value)
 {
-	binary_tree_t *binary_tree = NULL;
+	binary_tree_t *new;
 
-	if (parent == NULL)
+	if (!parent)
 		return (NULL);
-	binary_tree = calloc(1, sizeof(binary_tree_t));
-	if (binary_tree == NULL)
-		return (NULL);
-	binary_tree->parent = parent;
-	binary_tree->n = value;
-	if (parent->right != NULL)
+
+	new = binary_tree_node(parent, value);
+	if (parent->right)
 	{
-		binary_tree->right = parent->right;
-		binary_tree->right->parent = binary_tree;
+		parent->right->parent = new;
+		new->right = parent->right;
 	}
-	parent->right = binary_tree;
-	return (binary_tree);
+	parent->right = new;
+
+	return (new);
 }

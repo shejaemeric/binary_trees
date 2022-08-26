@@ -1,21 +1,17 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_nodes - how many nodes
- * @tree: tree
- * Return: number of noder
+ * binary_tree_nodes - nodes of binary tree
+ * @tree: binary tree
+ * Return: 1 or 0
  */
 size_t binary_tree_nodes(const binary_tree_t *tree)
 {
-	int n;
-
-	if (tree == NULL)
+	if (!tree)
 		return (0);
-
-	if (tree->left != NULL || tree->right != NULL)
-	{
-		n = 1 + binary_tree_nodes(tree->right) + binary_tree_nodes(tree->left);
-		return (n);
-	}
-	return (0);
+	if (!tree->left && !tree->right)
+		return (0);
+	else
+		return (binary_tree_nodes(tree->right) + 1 +
+				binary_tree_nodes(tree->left));
 }

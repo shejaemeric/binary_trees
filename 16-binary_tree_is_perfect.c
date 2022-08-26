@@ -1,77 +1,49 @@
 #include "binary_trees.h"
+
 /**
- * binary_tree_is_perfect - checks perfect
+ * binary_tree_depth - function to mesure the depht
  * @tree: tree
- * Return: 0 in false 1 in true
+ * Return: return depth
+ */
+size_t binary_tree_depth(const binary_tree_t *tree)
+{
+	int d = 0;
+
+	while (tree != NULL)
+	{
+		d++;
+		tree = tree->left;
+	}
+	return (d);
+}
+
+/**
+ * recursive_perfect - function to find if is perfect
+ * @tree: tree
+ * @d: depth most left
+ * @level: actual level
+ * Return: return depth
+ */
+int recursive_perfect(const binary_tree_t *tree, int d, int level)
+{
+	if (!tree)
+		return (0);
+	if (!tree->left && !tree->right)
+		return (d == level + 1);
+	if (!tree->left || !tree->right)
+		return (0);
+	return (recursive_perfect(tree->left, d, level + 1) &&
+		recursive_perfect(tree->right, d, level + 1));
+}
+
+/**
+ * binary_tree_is_perfect - check for a perfect tree
+ * @tree: tree for check
+ * Return: 1 if perfect 0 else
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	int size, height, isPerfect;
+	int d = binary_tree_depth(tree);
 
-	if (!tree)
-		return (0);
-	size = (int)binary_tree_size(tree);
-	height = binary_tree_height(tree);
-	isPerfect = size == (2 << height) - 1;
-	return (isPerfect);
-}
-/**
- * binary_tree_size - measure the size
- * @tree: input
- * Return: size
- */
-size_t binary_tree_size(const binary_tree_t *tree)
-{
-	int size;
-
-	if (tree == NULL)
-		return (0);
-
-	size = 1 + binary_tree_size(tree->right) + binary_tree_size(tree->left);
-
-	return (size);
-}
-
-/**
- * binary_tree_height - height of a binary tree
- * @tree: input tree
- * Return: height of tree
- */
-size_t binary_tree_height(const binary_tree_t *tree)
-{
-	if (tree == NULL)
-		return (0);
-	return (measure(tree) - 1);
-}
-/**
- * measure - helper
- * @tree: input tree
- * Return: height of tree
- */
-size_t measure(const binary_tree_t *tree)
-{
-	size_t left, right;
-	int total;
-
-	if (tree == NULL)
-		return (0);
-
-	left = measure(tree->left);
-	right = measure(tree->right);
-	total = max(left, right) + 1;
-	return (total);
-}
-
-/**
- * max - helper
- * @a: the first number
- * @b: the second number
- * Return: height of tree
- */
-int max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	else
-		return (b);
+	return (recursive_perfect(tree, d, 0));
 }

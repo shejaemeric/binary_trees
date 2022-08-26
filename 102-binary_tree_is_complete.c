@@ -1,55 +1,51 @@
 #include "binary_trees.h"
-/**
- * binary_tree_is_complete - is complete
- * @tree: tree
- * Return: 0 in false 1 in true
- */
-int binary_tree_is_complete(const binary_tree_t *tree)
-{
-	unsigned int i = 0;
-	size_t size;
 
-	if (tree == NULL)
+/**
+ * size - check recursivley
+ * @tree: tree to check
+ * Return: check
+ */
+unsigned int size(const binary_tree_t *tree)
+{
+	if (!tree)
 		return (0);
-
-	size = binary_tree_size(tree);
-	return (check(tree, i, size));
+	else
+		return (size(tree->left) +
+				size(tree->right) + 1);
 }
-/**
- * check - helper func for binary_tree_is_complete
- * @tree: tree
- * @index: current node
- * @size: size
- * Return: 0 in false 1 in true
- */
-int check(const binary_tree_t *tree, unsigned int index, size_t size)
-{
-	int isComplete = 0;
 
+/**
+ * complete_recursive - check recursivley
+ * @tree: tree to check
+ * @i: index
+ * @number_nodes: number of nodes
+ * Return: check
+ */
+int complete_recursive(const binary_tree_t *tree, unsigned int i,
+		       unsigned int number_nodes)
+{
 	if (tree == NULL)
 		return (1);
 
-	if (index >= size)
+	if (i >= number_nodes)
 		return (0);
 
-	isComplete = check(tree->left, 2 * index + 1, size) &&
-		check(tree->right, 2 * index + 2, size);
-	return (isComplete);
+	return (complete_recursive(tree->left, 2 * i + 1, number_nodes) &&
+		complete_recursive(tree->right, 2 * i + 2, number_nodes));
 }
 
 /**
- * binary_tree_size - measure the size
- * @tree: input
- * Return: size
+ * binary_tree_is_complete - check if is complete
+ * @tree: tree to check
+ * Return: 0 or 1
  */
-size_t binary_tree_size(const binary_tree_t *tree)
+int binary_tree_is_complete(const binary_tree_t *tree)
 {
-	int size;
+	unsigned int nodes = size(tree);
+	unsigned int i = 0;
 
-	if (tree == NULL)
+	if (!tree)
 		return (0);
 
-	size = 1 + binary_tree_size(tree->right) + binary_tree_size(tree->left);
-
-	return (size);
+	return (complete_recursive(tree, i, nodes));
 }
